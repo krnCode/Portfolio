@@ -14,3 +14,4 @@ app_pages: dict[str, list[st.Page]] = {
 }
 
 pg: st.Page = st.navigation(app_pages)
+pg.run()
