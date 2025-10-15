@@ -7,7 +7,6 @@ import streamlit as st
 
 app_pages: dict[str, list[st.Page]] = {
     "Início": [
-        st.Page("./app_pages/inicio/pagina_inicial.py", title="Página Inicial"),
         st.Page("./app_pages/inicio/sobre.py", title="Sobre"),
     ],
     "Portifolio": [],
