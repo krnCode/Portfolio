@@ -7,12 +7,10 @@ import streamlit as st
 
 app_pages: dict[str, list[st.Page]] = {
     "Início": [
-        st.Page("pagina_inicial.py", title="Página Inicial"),
-        st.Page("sobre.py", title="Sobre"),
+        st.Page("./app_pages/inicio/pagina_inicial.py", title="Página Inicial"),
+        st.Page("./app_pages/inicio/sobre.py", title="Sobre"),
     ],
-    "Portifolio": [
-        st.Page("projects.py", title="Meus Projetos"),
-    ],
+    "Portifolio": [],
 }
 
 pg: st.Page = st.navigation(app_pages)
