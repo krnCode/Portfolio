@@ -3,6 +3,7 @@ Este script gera dados sintéticos (não reais) para serem utilizados neste proj
 """
 
 from faker import Faker
+import xlsxwriter
 import polars as pl
 import random
 
@@ -20,13 +21,21 @@ def gerar_dados_projeto(
     Contém as seguintes colunas:
     - ID Projeto: str
     - Nome Projeto: str
-    - Data Criação Projeto: datetime
+    - Data Criação Projeto: datetime (de 5 anos atrás até hoje)
     - ID Cliente: str
     - Nome Cliente: str
     - CNPJ Cliente: str
+    - Taxa/Hora Contratada: int (50 a 500)
 
     Args:
-        qtd_itens (int, optional): Quantidade de itens para serem gerados. Padrão é 50.
+        qtd_itens (int, optional):
+        Quantidade de itens para serem gerados. Padrão é 50.
+
+        qtd_projetos (int, optional):
+        Quantidade de projetos únicos para serem gerados. Padrão é 20.
+
+        qtd_clientes (int, optional):
+        Quantidade de clientes únicos para serem gerados. Padrão é 20.
 
     Returns:
         list[dict]: Retorna uma lista de dicionários com os dados gerados.
@@ -36,7 +45,7 @@ def gerar_dados_projeto(
             "ID Projeto": "PROJ" + str(random.randint(1, qtd_projetos)).zfill(10),
             "Nome Projeto": " ".join(fk_en.words(3)).title(),
             "Data Criação Projeto": fk_br.date_time_between(
-                start_date="-5y", end_date="-3y"
+                start_date="-5y", end_date="now"
             ),
             "ID Cliente": "CLI" + str(random.randint(1, qtd_clientes)).zfill(10),
             "Nome Cliente": fk_br.unique.company(),
@@ -55,16 +64,22 @@ def gerar_servicos_projeto(
     Gera dados sintéticos contendo a descrição dos serviços realizados para o projeto.
 
     contém as seguintes colunas:
+    - Projeto Vinculado: str
     - ID Serviço: str
-    - Descrição Serviço: str
-    - Responsável pelo Serviço: str
-    - QTD Horas: int
-    - Data Serviço: datetime
+    - Descrição Serviço: str (60 caracteres)
+    - Responsável pelo Serviço: str (30 caracteres)
+    - QTD Horas: int (1 a 10)
+    - Data Serviço: datetime (de 5 anos atrás até hoje)
 
     Args:
-        qtd_itens (int, optional): Quantidade de itens para serem gerados. Padrão é 50.
+        projeto (dict):
+        Dicionário com os dados do projeto vinculado ao serviço.
+
+        qtd_servicos (int, optional):
+        Quantidade de itens para serem gerados. Padrão é 20.
+
     Returns:
-        list[dict]: Retorna uma lista de dicionários com os dados gerados.
+        dict: Retorna um dicionário com os dados gerados.
     """
     return {
         "Projeto Vinculado": projeto["ID Projeto"],
@@ -117,13 +132,24 @@ if __name__ == "__main__":
 
     print(df_final)
 
-    with Workbook(r"C:\Users\conta\Desktop\test.xlsx") as wb:
+    with xlsxwriter.Workbook(r"C:\Users\conta\Desktop\extrato_servicos.xlsx") as wb:
+        ws = wb.add_worksheet("extrato")
+
+        title_bold = wb.add_format({"bold": True, "font_size": 30})
+
+        ws.set_column("A:A", 3)
+        ws.write("B2", "Extrato dos Serviços por Projeto", title_bold)
+
         df_final.write_excel(
-            workbook=r"C:\Users\conta\Desktop\test.xlsx",
-            worksheet="teste",
-            position="B5",
+            workbook=wb,
+            worksheet=ws,
+            position="B4",
             table_style="Table Style Light 1",
-            header_format={"bold": True, "font_color": "white", "bg_color": "#0B092C"},
+            header_format={
+                "bold": True,
+                "font_color": "white",
+                "bg_color": "#0B092C",
+            },
             column_totals=["QTD Horas", "Custo Serviço"],
             autofit=True,
             hide_gridlines=True,
