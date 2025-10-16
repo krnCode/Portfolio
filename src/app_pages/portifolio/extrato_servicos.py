@@ -9,6 +9,7 @@ pelo usuário, e agiliza o atendimento ao cliente caso este precise de mais info
 sobre os serviços prestados.
 """
 
+import altair as alt
 import streamlit as st
 import polars as pl
 import random
@@ -68,7 +69,7 @@ if "dados_projeto" not in ss or "servicos_projeto" not in ss:
     ss.dados_projeto, ss.servicos_projeto = gerar_dados()
 
 with st.sidebar:
-    if st.button("Gerar Novos Dados"):
+    if st.button(label="Gerar Novos Dados", width="stretch"):
         ss.dados_projeto, ss.servicos_projeto = gerar_dados()
         st.rerun()
 # endregion
@@ -272,4 +273,70 @@ tab1, tab2 = st.tabs(tabs=["Relação de Serviços", "Visualizações Gráficas"
 with tab1:
     st.write("### Relação de Serviços")
     st.dataframe(df_filtrada.collect(), width="stretch")
+
+with tab2:
+    st.write("### Visualizações Gráficas")
+
+    with st.expander(label="Custo Total", expanded=True):
+        col1, col2 = st.columns(2)
+        with col1:
+            st.write("#### Por Período")
+            df_custo_por_periodo = (
+                df_servicos_filtrados_taxahora.sort("Data Serviço")
+                .group_by_dynamic(
+                    "Data Serviço",
+                    every="1mo",
+                )
+                .agg(
+                    pl.col("Custo Serviço").sum().alias("Custo Serviço"),
+                )
+            )
+
+            fig = (
+                alt.Chart(df_custo_por_periodo.sort("Data Serviço", descending=True))
+                .mark_line(point=True)
+                .encode(
+                    x=alt.X(
+                        "Data Serviço:T",
+                        title="Período",
+                        axis=alt.Axis(format="%m/%Y"),
+                    ),
+                    y=alt.Y(
+                        "sum(Custo Serviço):Q",
+                        title="Custo Total (R$)",
+                        axis=alt.Axis(format=",.2f"),
+                    ),
+                    tooltip=[
+                        alt.Tooltip("Data Serviço:T", title="Período", format="%m/%Y"),
+                        alt.Tooltip(
+                            "sum(Custo Serviço):Q", title="Custo Total", format=",.2f"
+                        ),
+                    ],
+                )
+            )
+            st.altair_chart(fig, use_container_width=True)
+
+        with col2:
+            st.write("#### Por Cliente (TOP 10)")
+            df_custo_por_cliente = df_servicos_filtrados_taxahora.group_by(
+                [
+                    "Nome Cliente",
+                    "ID Cliente",
+                    "CNPJ Cliente",
+                    "Projeto Vinculado",
+                ]
+            ).agg(pl.col("Custo Serviço").sum())
+
+            fig = (
+                alt.Chart(
+                    df_custo_por_cliente.sort("Custo Serviço", descending=True).head(10)
+                )
+                .mark_bar()
+                .encode(
+                    x=alt.X("Nome Cliente:N", sort="-y"),
+                    y="Custo Serviço:Q",
+                    color="Custo Serviço:Q",
+                )
+            )
+            st.altair_chart(fig, use_container_width=True)
 # endregion
