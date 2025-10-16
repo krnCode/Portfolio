@@ -12,7 +12,7 @@ sobre os serviços prestados.
 import streamlit as st
 import polars as pl
 import xlsxwriter
-from src.mockup_data.faker_data_generation import (
+from mockup_data.faker_data_generation import (
     gerar_dados_projeto,
     gerar_servicos_projeto,
 )
