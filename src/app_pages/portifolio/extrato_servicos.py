@@ -18,6 +18,7 @@ from mockup_data.faker_data_generation import (
     gerar_dados_projeto,
     gerar_servicos_projeto,
 )
+from tools.data_tools import salvar_xlsx
 from streamlit import session_state as ss
 from datetime import datetime, timedelta
 
@@ -50,7 +51,15 @@ st.set_page_config(
 
 
 # region Gerar Dados
-def gerar_dados():
+def gerar_dados() -> list[dict]:
+    """
+    Função para gerar dados para o extrato de serviços por projeto.
+    Retorna uma lista de dicionários com os dados gerados.
+
+    Returns:
+        list[dict]:
+        Lista de dicionários com os dados gerados para projetos e serviços.
+    """
 
     dados_projeto: list[dict] = gerar_dados_projeto(
         qtd_itens=random.randint(50, 200),
@@ -275,6 +284,12 @@ with tab1:
     st.write("### Relação de Serviços")
     st.dataframe(df_filtrada.collect(), width="stretch")
 
+    st.download_button(
+        label="Exportar para Excel",
+        data=salvar_xlsx(df_filtrada.collect()),
+        file_name="extrato_servicos.xlsx",
+    )
+
 with tab2:
     st.write("### Visualizações Gráficas")
 
@@ -299,13 +314,16 @@ with tab2:
                 .encode(
                     x=alt.X(
                         "Data Serviço:T",
-                        title="Período",
+                        title=None,
                         axis=alt.Axis(format="%m/%Y"),
                     ),
                     y=alt.Y(
                         "sum(Custo Serviço):Q",
-                        title="Custo Total (R$)",
+                        title=None,
                         axis=alt.Axis(format=",.2f"),
+                    ),
+                    color=alt.Color("sum(Custo Serviço):Q", legend=None).scale(
+                        scheme="blues"
                     ),
                     tooltip=[
                         alt.Tooltip("Data Serviço:T", title="Período", format="%m/%Y"),
@@ -334,9 +352,9 @@ with tab2:
                 )
                 .mark_bar()
                 .encode(
-                    x=alt.X("Nome Cliente:N", sort="-y"),
-                    y="Custo Serviço:Q",
-                    color="Custo Serviço:Q",
+                    x=alt.X("Nome Cliente:N", sort="-y", title=None),
+                    y=alt.Y("Custo Serviço:Q", title=None),
+                    color=alt.Color("Custo Serviço:Q").scale(scheme="blues"),
                 )
             )
             st.altair_chart(fig, use_container_width=True)
