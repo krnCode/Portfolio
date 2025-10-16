@@ -9,7 +9,11 @@ app_pages: dict[str, list[st.Page]] = {
     "Início": [
         st.Page("./app_pages/inicio/sobre.py", title="Sobre"),
     ],
-    "Portifolio": [],
+    "Portifolio": [
+        st.Page(
+            "./app_pages/portifolio/extrato_servicos.py", title="Extrato de Serviços"
+        ),
+    ],
 }
 
 pg: st.Page = st.navigation(app_pages)
