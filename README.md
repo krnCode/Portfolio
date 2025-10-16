@@ -6,8 +6,8 @@ Este repositório contém exemplos de projetos e soluções que desenvolvi utili
 Os projetos e soluções estão disponíveis para visualização no Streamlit (link: ).
 
 ## Projetos
-- **Painel de Relação de Serviços**: Painel utilizado para visualizar e extrair relação de serviços
-- **Personalização Excel**: Arquivos extraídos do app contém um relatório personalizado em Excel.
+- **Painel de Relação de Serviços**: Painel utilizado para visualizar e extrair relação de serviços;
+- **Personalização Excel**: Arquivos extraídos do app contém um relatório personalizado em Excel;
 
 ## Principais Tecnologias Utilizadas
 - Python
