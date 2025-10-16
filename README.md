@@ -3,11 +3,11 @@
 ## Sobre
 Este repositório contém exemplos de projetos e soluções que desenvolvi utilizando Python e Streamlit para solucionar problemas reais e otimizar processos.
 
+Os projetos e soluções estão disponíveis para visualização no Streamlit (link: ).
 
 ## Projetos
-- **Painel de Relação de Serviços**: Painel utilizado para visualizar e extrair 
-- **Gerador de Relatórios**: Automação na criação de relatórios em Excel
-- [Adicione outros projetos conforme necessário]
+- **Painel de Relação de Serviços**: Painel utilizado para visualizar e extrair relação de serviços
+- **Personalização Excel**: Arquivos extraídos do app contém um relatório personalizado em Excel.
 
 ## Principais Tecnologias Utilizadas
 - Python
@@ -16,6 +16,6 @@ Este repositório contém exemplos de projetos e soluções que desenvolvi utili
 - XlsxWriter
 - Faker
 
-## 📫 Contato
-- LinkedIn: [Paulo Santana] (https://www.linkedin.com/in/paulosanlkd/)
-- GitHub: [krnCode] (https://github.com/krnCode)
+## Contato
+- LinkedIn: [Paulo Santana](https://www.linkedin.com/in/paulosanlkd/)
+- GitHub: [krnCode](https://github.com/krnCode)
