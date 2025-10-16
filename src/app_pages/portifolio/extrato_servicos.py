@@ -31,8 +31,8 @@ st.set_page_config(
         "About": """
     PROBLEMA:
     Os analistas recebiam diversas solicitações de clientes para o envio
-    de mais informações sobre os serviços prestados para entender a composição do que 
-    foi cobrado. Os analistas precisavam encontrar as informações no sistema, extrair 
+    de mais informações sobre os serviços prestados contendo a composição do que 
+    foi cobrado. Os analistas precisavam encontrar estes dados no sistema, extrair 
     relatórios, tratar, recalcular e confirmar se estava tudo correto, para então enviar
     ao cliente.
 
