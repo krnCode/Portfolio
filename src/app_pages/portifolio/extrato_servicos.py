@@ -202,7 +202,7 @@ with st.sidebar:
         )
     if servico_selecionado:
         df_filtrada = df_filtrada.filter(
-            pl.col("Nome Serviço").is_in(servico_selecionado)
+            pl.col("Descrição Serviço").is_in(servico_selecionado)
         )
 
     df_servicos_filtrados_taxahora: pl.LazyFrame = df_filtrada.collect()
