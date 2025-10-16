@@ -102,7 +102,7 @@ with st.sidebar:
     with col1:
         data_inicial: datetime = st.date_input(
             label="Data Inicial",
-            value=datetime.today() - timedelta(days=30),
+            value=datetime.today() - timedelta(days=3650),
             format="DD/MM/YYYY",
         )
     with col2:
