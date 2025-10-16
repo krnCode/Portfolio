@@ -41,7 +41,8 @@ st.set_page_config(
     permite a visualização dos dados, a exportação em excel já formatado e recalculado,
     facilitando e agilizando o atendimento ao cliente. Neste painel, as informações
     entre as diferentes tabelas (tabela de projetos e tabela de serviços) já estão
-    relacionadas, e o usuário pode filtrar por projeto, cliente, data, etc.
+    relacionadas, e o usuário pode filtrar por projeto, cliente, data, etc para extrair
+    apenas os dados que precisa enviar.
     """,
     },
 )
