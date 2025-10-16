@@ -172,6 +172,16 @@ with st.sidebar:
         .to_list(),
         placeholder="Selecione pelo nome do cliente",
     )
+    responsavel_servico_selecionado: str = st.multiselect(
+        label="Responsável pelo Serviço",
+        options=df_servicos_taxahora.select(pl.col("Responsável pelo Serviço"))
+        .unique()
+        .sort("Responsável pelo Serviço")
+        .collect()
+        .to_series()
+        .to_list(),
+        placeholder="Selecione pelo nome do cliente",
+    )
 
     # Aplicar filtros
     df_filtrada: pl.LazyFrame = df_servicos_taxahora.filter(
@@ -182,6 +192,7 @@ with st.sidebar:
         df_filtrada = df_filtrada.filter(
             pl.col("Projeto Vinculado").is_in(cod_projeto_selecionado)
         )
+
     if projeto_selecionado:
         df_filtrada = df_filtrada.filter(
             pl.col("Nome Projeto").is_in(projeto_selecionado)
@@ -191,6 +202,7 @@ with st.sidebar:
         df_filtrada = df_filtrada.filter(
             pl.col("ID Cliente").is_in(cod_cliente_selecionado)
         )
+
     if cliente_selecionado:
         df_filtrada = df_filtrada.filter(
             pl.col("Nome Cliente").is_in(cliente_selecionado)
@@ -200,9 +212,15 @@ with st.sidebar:
         df_filtrada = df_filtrada.filter(
             pl.col("ID Serviço").is_in(cod_servico_selecionado)
         )
+
     if servico_selecionado:
         df_filtrada = df_filtrada.filter(
             pl.col("Descrição Serviço").is_in(servico_selecionado)
+        )
+
+    if responsavel_servico_selecionado:
+        df_filtrada = df_filtrada.filter(
+            pl.col("Responsável pelo Serviço").is_in(responsavel_servico_selecionado)
         )
 
     df_servicos_filtrados_taxahora: pl.LazyFrame = df_filtrada.collect()
