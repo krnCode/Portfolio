@@ -310,7 +310,13 @@ with tab2:
             )
 
             fig = (
-                alt.Chart(df_custo_por_periodo.sort("Data Serviço", descending=True))
+                alt.Chart(
+                    df_custo_por_periodo.sort(
+                        "Data Serviço",
+                        descending=True,
+                    ),
+                    title="Evolução do custo total de serviços (em R$)",
+                )
                 .mark_line(point=True)
                 .encode(
                     x=alt.X(
@@ -350,7 +356,10 @@ with tab2:
 
             fig = (
                 alt.Chart(
-                    df_custo_por_cliente.sort("Custo Serviço", descending=True).head(10)
+                    df_custo_por_cliente.sort("Custo Serviço", descending=True).head(
+                        10
+                    ),
+                    title="Clientes com maior valor de custo total de serviços (em R$)",
                 )
                 .mark_bar()
                 .encode(
@@ -378,7 +387,10 @@ with tab2:
             )
 
             fig = (
-                alt.Chart(df_projetos_por_periodo.sort("Data Serviço", descending=True))
+                alt.Chart(
+                    df_projetos_por_periodo.sort("Data Serviço", descending=True),
+                    title="Evolução da quantidade de projetos (em unidades)",
+                )
                 .mark_line(point=True)
                 .encode(
                     x=alt.X(
@@ -423,7 +435,8 @@ with tab2:
                 alt.Chart(
                     df_projetos_por_valor.sort("Custo Serviço", descending=True).head(
                         10
-                    )
+                    ),
+                    title="Projetos com maior valor de custo total de serviços (em R$)",
                 )
                 .mark_bar()
                 .encode(
