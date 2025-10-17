@@ -293,6 +293,7 @@ with tab1:
 with tab2:
     st.write("### Visualizações Gráficas")
 
+    # Dashboard - Custo Total
     with st.expander(label="Custo Total", expanded=True):
         col1, col2 = st.columns(2)
         with col1:
@@ -323,7 +324,7 @@ with tab2:
                         axis=alt.Axis(format=",.2f"),
                     ),
                     color=alt.Color("sum(Custo Serviço):Q", legend=None).scale(
-                        scheme="blues"
+                        scheme="greens"
                     ),
                     tooltip=[
                         alt.Tooltip("Data Serviço:T", title="Período", format="%m/%Y"),
@@ -354,8 +355,107 @@ with tab2:
                 .encode(
                     x=alt.X("Nome Cliente:N", sort="-y", title=None),
                     y=alt.Y("Custo Serviço:Q", title=None),
-                    color=alt.Color("Custo Serviço:Q").scale(scheme="blues"),
+                    color=alt.Color("Custo Serviço:Q").scale(scheme="greens"),
                 )
             )
             st.altair_chart(fig, use_container_width=True)
+
+    # Dashboard - Projetos
+    with st.expander(label="Projetos", expanded=True):
+        col1, col2 = st.columns(2)
+        with col1:
+            st.write("#### Por Período")
+            df_projetos_por_periodo = (
+                df_servicos_filtrados_taxahora.sort("Data Serviço")
+                .group_by_dynamic(
+                    "Data Serviço",
+                    every="1mo",
+                )
+                .agg(
+                    pl.col("Projeto Vinculado").unique().count().alias("Quantidade"),
+                )
+            )
+
+            fig = (
+                alt.Chart(df_projetos_por_periodo.sort("Data Serviço", descending=True))
+                .mark_line(point=True)
+                .encode(
+                    x=alt.X(
+                        "Data Serviço:T",
+                        title=None,
+                        axis=alt.Axis(format="%m/%Y"),
+                    ),
+                    y=alt.Y(
+                        "sum(Quantidade):Q",
+                        title=None,
+                        axis=alt.Axis(format=",.2f"),
+                    ),
+                    color=alt.Color("sum(Quantidade):Q", legend=None).scale(
+                        scheme="blues"
+                    ),
+                    tooltip=[
+                        alt.Tooltip("Data Serviço:T", title="Período", format="%m/%Y"),
+                        alt.Tooltip(
+                            "sum(Quantidade):Q",
+                            title="Quantidade de Projetos",
+                            format=",.2f",
+                        ),
+                    ],
+                )
+            )
+            st.altair_chart(fig, use_container_width=True)
+
+        with col2:
+            st.write("#### Por Valor (TOP 10)")
+            df_projetos_por_valor = df_servicos_filtrados_taxahora.group_by(
+                [
+                    "Projeto Vinculado",
+                    "Nome Projeto",
+                    "Nome Cliente",
+                    "ID Cliente",
+                    "CNPJ Cliente",
+                ]
+            ).agg(pl.col("Custo Serviço").sum())
+
+            fig = (
+                alt.Chart(
+                    df_projetos_por_valor.sort("Custo Serviço", descending=True).head(
+                        10
+                    )
+                )
+                .mark_bar()
+                .encode(
+                    x=alt.X("Projeto Vinculado:N", sort="-y", title=None),
+                    y=alt.Y("Custo Serviço:Q", title=None),
+                    color=alt.Color("Custo Serviço:Q").scale(scheme="blues"),
+                    tooltip=[
+                        alt.Tooltip(
+                            "Projeto Vinculado:N",
+                            title="Código do Projeto",
+                        ),
+                        alt.Tooltip(
+                            "Nome Projeto:N",
+                            title="Nome do Projeto",
+                        ),
+                        alt.Tooltip(
+                            "Nome Cliente:N",
+                            title="Nome do Cliente",
+                        ),
+                        alt.Tooltip(
+                            "ID Cliente:N",
+                            title="Código do Cliente",
+                        ),
+                        alt.Tooltip(
+                            "CNPJ Cliente:N",
+                            title="CNPJ do Cliente",
+                        ),
+                        alt.Tooltip(
+                            "Custo Serviço:Q", title="Custo Total", format=",.2f"
+                        ),
+                    ],
+                )
+            )
+            st.altair_chart(fig, use_container_width=True)
+
+
 # endregion
