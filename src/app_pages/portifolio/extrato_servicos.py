@@ -333,6 +333,7 @@ with tab2:
                         ),
                     ],
                 )
+                .configure_point(size=50)
             )
             st.altair_chart(fig, use_container_width=True)
 
@@ -402,6 +403,7 @@ with tab2:
                         ),
                     ],
                 )
+                .configure_point(size=50)
             )
             st.altair_chart(fig, use_container_width=True)
 
