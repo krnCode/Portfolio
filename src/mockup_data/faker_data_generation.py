@@ -11,6 +11,7 @@ fk_en: Faker = Faker("en_US")
 fk_br: Faker = Faker("pt_BR")
 
 
+# region Extrato Serviços
 def gerar_dados_projeto(
     qtd_itens: int = 50,
     qtd_projetos: int = 20,
@@ -91,6 +92,9 @@ def gerar_servicos_projeto(
             start_date=projeto["Data Criação Projeto"], end_date="now"
         ),
     }
+
+
+# endregion
 
 
 if __name__ == "__main__":
