@@ -376,9 +376,9 @@ with tab2:
         with col1:
             st.write("#### Por Período")
             df_projetos_por_periodo = (
-                df_servicos_filtrados_taxahora.sort("Data Serviço")
+                df_servicos_filtrados_taxahora.sort("Data Criação Projeto")
                 .group_by_dynamic(
-                    "Data Serviço",
+                    "Data Criação Projeto",
                     every="1mo",
                 )
                 .agg(
@@ -388,13 +388,15 @@ with tab2:
 
             fig = (
                 alt.Chart(
-                    df_projetos_por_periodo.sort("Data Serviço", descending=True),
+                    df_projetos_por_periodo.sort(
+                        "Data Criação Projeto", descending=True
+                    ),
                     title="Evolução da quantidade de projetos (em unidades)",
                 )
                 .mark_line(point=True)
                 .encode(
                     x=alt.X(
-                        "Data Serviço:T",
+                        "Data Criação Projeto:T",
                         title=None,
                         axis=alt.Axis(format="%m/%Y"),
                     ),
@@ -407,7 +409,11 @@ with tab2:
                         scheme="blues"
                     ),
                     tooltip=[
-                        alt.Tooltip("Data Serviço:T", title="Período", format="%m/%Y"),
+                        alt.Tooltip(
+                            "Data Data Criação Projeto:T",
+                            title="Período",
+                            format="%m/%Y",
+                        ),
                         alt.Tooltip(
                             "sum(Quantidade):Q",
                             title="Quantidade de Projetos",
