@@ -22,7 +22,7 @@ from tools.data_tools import salvar_xlsx
 from streamlit import session_state as ss
 from datetime import datetime, timedelta
 
-# region Conig Página
+# region Config Página
 # Nesta seção é definido o título da página, o layout e os itens de menu - itens para
 # explicar o projeto, com o problema e a solução adotada.
 st.set_page_config(
