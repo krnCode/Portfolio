@@ -99,62 +99,62 @@ def gerar_servicos_projeto(
 
 if __name__ == "__main__":
     # Teste rápido para visualizar os dados gerados
-    dados_projeto: list[dict] = gerar_dados_projeto(
-        qtd_itens=159, qtd_projetos=360, qtd_clientes=254
-    )
-    servicos_projeto: list[dict] = [
-        gerar_servicos_projeto(projeto=projeto, qtd_servicos=500)
-        for projeto in dados_projeto
-        for i in range(random.randint(1, 20))
-    ]
+    # dados_projeto: list[dict] = gerar_dados_projeto(
+    #     qtd_itens=159, qtd_projetos=360, qtd_clientes=254
+    # )
+    # servicos_projeto: list[dict] = [
+    #     gerar_servicos_projeto(projeto=projeto, qtd_servicos=500)
+    #     for projeto in dados_projeto
+    #     for i in range(random.randint(1, 20))
+    # ]
 
-    df_projetos: pl.LazyFrame = pl.LazyFrame(dados_projeto)
-    df_servicos: pl.LazyFrame = pl.LazyFrame(servicos_projeto)
+    # df_projetos: pl.LazyFrame = pl.LazyFrame(dados_projeto)
+    # df_servicos: pl.LazyFrame = pl.LazyFrame(servicos_projeto)
 
-    # print(df_projetos)
-    # print(df_servicos)
+    # # print(df_projetos)
+    # # print(df_servicos)
 
-    df_servicos_taxahora: pl.LazyFrame = (
-        df_servicos.join(
-            other=df_projetos,
-            left_on="Projeto Vinculado",
-            right_on="ID Projeto",
-            how="inner",
-        )
-        .with_columns(
-            (pl.col("QTD Horas") * pl.col("Taxa/Hora Contratada")).alias(
-                "Custo Serviço"
-            )
-        )
-        .sort(
-            by=["Projeto Vinculado", "Data Serviço"],
-            descending=[False, False],
-        )
-    )
+    # df_servicos_taxahora: pl.LazyFrame = (
+    #     df_servicos.join(
+    #         other=df_projetos,
+    #         left_on="Projeto Vinculado",
+    #         right_on="ID Projeto",
+    #         how="inner",
+    #     )
+    #     .with_columns(
+    #         (pl.col("QTD Horas") * pl.col("Taxa/Hora Contratada")).alias(
+    #             "Custo Serviço"
+    #         )
+    #     )
+    #     .sort(
+    #         by=["Projeto Vinculado", "Data Serviço"],
+    #         descending=[False, False],
+    #     )
+    # )
 
-    df_final: pl.LazyFrame = df_servicos_taxahora.collect()
+    # df_final: pl.LazyFrame = df_servicos_taxahora.collect()
 
-    print(df_final)
+    # print(df_final)
 
-    with xlsxwriter.Workbook(r"C:\Users\conta\Desktop\extrato_servicos.xlsx") as wb:
-        ws = wb.add_worksheet("extrato")
+    # with xlsxwriter.Workbook(r"C:\Users\conta\Desktop\extrato_servicos.xlsx") as wb:
+    #     ws = wb.add_worksheet("extrato")
 
-        title_bold = wb.add_format({"bold": True, "font_size": 30})
+    #     title_bold = wb.add_format({"bold": True, "font_size": 30})
 
-        ws.set_column("A:A", 3)
-        ws.write("B2", "Extrato dos Serviços por Projeto", title_bold)
+    #     ws.set_column("A:A", 3)
+    #     ws.write("B2", "Extrato dos Serviços por Projeto", title_bold)
 
-        df_final.write_excel(
-            workbook=wb,
-            worksheet=ws,
-            position="B4",
-            table_style="Table Style Light 1",
-            header_format={
-                "bold": True,
-                "font_color": "white",
-                "bg_color": "#0B092C",
-            },
-            column_totals=["QTD Horas", "Custo Serviço"],
-            autofit=True,
-            hide_gridlines=True,
-        )
+    #     df_final.write_excel(
+    #         workbook=wb,
+    #         worksheet=ws,
+    #         position="B4",
+    #         table_style="Table Style Light 1",
+    #         header_format={
+    #             "bold": True,
+    #             "font_color": "white",
+    #             "bg_color": "#0B092C",
+    #         },
+    #         column_totals=["QTD Horas", "Custo Serviço"],
+    #         autofit=True,
+    #         hide_gridlines=True,
+    #     )
