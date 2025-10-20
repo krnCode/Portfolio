@@ -31,6 +31,7 @@ st.set_page_config(
     menu_items={
         "About": """
     PROBLEMA:
+
     Os analistas recebiam diversas solicitações de clientes para o envio
     de mais informações sobre os serviços prestados contendo a composição do que 
     foi cobrado. Os analistas precisavam encontrar estes dados no sistema, extrair 
@@ -38,6 +39,7 @@ st.set_page_config(
     ao cliente.
 
     SOLUÇÃO:
+    
     Padronizamos o processo de análise e extração por meio de um painel que
     permite a visualização dos dados, a exportação em excel já formatado e recalculado,
     facilitando e agilizando o atendimento ao cliente. Neste painel, as informações
