@@ -13,6 +13,9 @@ app_pages: dict[str, list[st.Page]] = {
         st.Page(
             "./app_pages/portifolio/extrato_servicos.py", title="Extrato de Serviços"
         ),
+        st.Page(
+            "./app_pages/portifolio/controle_tickets.py", title="Controle de Tickets"
+        ),
     ],
 }
 
