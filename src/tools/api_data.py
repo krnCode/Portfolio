@@ -29,7 +29,7 @@ def buscar_dados_random_user(quantidade: int = 5) -> list[dict]:
         list[dict]:
         Retorna uma lista de dicionários com os dados de usuários.
     """
-    url = f"https://randomuser.me/api/?results={quantidade}&nat=br?inc=name,phone,email,id,picture"
+    url = f"https://randomuser.me/api?nat=br&results={quantidade}&inc=name,phone,email,id,picture"
 
     try:
         response = r.get(url)
@@ -64,7 +64,7 @@ def processar_dados_random_user(dados: list[dict]) -> pl.DataFrame:
             "Sobrenome": dado["name"]["last"],
             "Telefone": dado["phone"],
             "Email Empresarial": dado["email"],
-            "Foto": dado["picture"],
+            "Foto": dado["picture"]["large"],
         }
 
         dados_processados.append(dado_processado)
