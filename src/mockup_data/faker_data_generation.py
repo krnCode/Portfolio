@@ -119,22 +119,24 @@ def gerar_dados_tickets(
         list[dict]:
         Retorna uma lista de dicionários com os dados gerados.
     """
-    data_criação_ticket: datetime = fk_br.date_time_between(
-        start_date="-2m", end_date="now"
-    )
-    dados_tickets: list[dict] = [
-        {
-            "ID Ticket": "TKT" + str(random.randint(1000, 2999)).zfill(4),
-            "Data Criação Ticket": data_criação_ticket,
-            "Data Atualização Ticket": fk_br.date_time_between(
-                start_date=data_criação_ticket, end_date="now"
-            ),
-            "Status Ticket": random.choice(["Pendente", "Em andamento", "Concluído"]),
-            "Analista": random.choice(df_analistas),
-            "Cliente": fk_br.unique.company(),
-        }
-        for i in range(qtd)
-    ]
+    dados_tickets: list[dict] = []
+
+    for i in range(qtd):
+        for analista in df_analistas["Analista"]:
+            data_criacao = fk_br.date_time_between(start_date="-3M", end_date="now")
+            data_atualizacao = fk_br.date_time_between(
+                start_date=data_criacao, end_date="now"
+            )
+            dados_tickets.append(
+                {
+                    "ID Ticket": "TKT" + str(random.randint(1000, 2999)).zfill(4),
+                    "Data Criação Ticket": data_criacao,
+                    "Data Atualização Ticket": data_atualizacao,
+                    "Status Ticket": random.choice(["Pendente", "Aberto", "Concluído"]),
+                    "Analista": analista,
+                    "Cliente": fk_br.unique.company(),
+                }
+            )
 
     return dados_tickets
 
