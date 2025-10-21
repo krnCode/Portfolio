@@ -2,10 +2,10 @@
 Este script gera dados sintéticos (não reais) para serem utilizados neste projeto.
 """
 
-from faker import Faker
-import xlsxwriter
 import polars as pl
 import random
+from faker import Faker
+from datetime import datetime
 
 fk_en: Faker = Faker("en_US")
 fk_br: Faker = Faker("pt_BR")
@@ -97,7 +97,52 @@ def gerar_servicos_projeto(
 # endregion
 
 
+# region Controle Tickets
+def gerar_dados_tickets(
+    qtd: int = 10, df_analistas: pl.DataFrame = pl.DataFrame()
+) -> list[dict]:
+    """
+    Gera dados sintéticos com a quantidade informada, sendo o padrão 50 itens.
+    Contém as seguintes colunas:
+    - ID Ticket: str
+    - Data Criação Ticket: datetime (de 2 meses atrás até hoje)
+    - Data Atualização Ticket: datetime (de 2 meses atrás até hoje)
+    - Status Ticket: str
+    - Analista: str
+    - Cliente: str
+
+    Args:
+        qtd (int, optional):
+        Quantidade de itens para serem gerados. Padrão é 10
+
+    Returns:
+        list[dict]:
+        Retorna uma lista de dicionários com os dados gerados.
+    """
+    data_criação_ticket: datetime = fk_br.date_time_between(
+        start_date="-2m", end_date="now"
+    )
+    dados_tickets: list[dict] = [
+        {
+            "ID Ticket": "TKT" + str(random.randint(1000, 2999)).zfill(4),
+            "Data Criação Ticket": data_criação_ticket,
+            "Data Atualização Ticket": fk_br.date_time_between(
+                start_date=data_criação_ticket, end_date="now"
+            ),
+            "Status Ticket": random.choice(["Pendente", "Em andamento", "Concluído"]),
+            "Analista": random.choice(df_analistas),
+            "Cliente": fk_br.unique.company(),
+        }
+        for i in range(qtd)
+    ]
+
+    return dados_tickets
+
+
+# endregion
+
 if __name__ == "__main__":
+    pass
     # Teste rápido para visualizar os dados gerados
     # dados_projeto: list[dict] = gerar_dados_projeto(
     #     qtd_itens=159, qtd_projetos=360, qtd_clientes=254
