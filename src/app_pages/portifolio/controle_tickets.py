@@ -10,6 +10,7 @@ acompanhamento dos tickets em andamento.
 Visto que o painel está ligado via API, as informações sempre estarão atualizadas.
 """
 
+import altair as alt
 import streamlit as st
 import polars as pl
 import random
@@ -68,37 +69,61 @@ def gerar_dados_analistas(qtd: int = 10) -> list[dict]:
     return buscar_dados_random_user(qtd)
 
 
+# Tickets - Faker
+def dados_tickets(
+    qtd: int = 10, df_analistas: pl.DataFrame = pl.DataFrame()
+) -> pl.DataFrame:
+    """
+    Função para gerar dados para os tickets.
+    Retorna uma lista de dicionários com os dados gerados.
+
+    Returns:
+        list[dict]:
+        Lista de dicionários com os dados gerados para tickets.
+    """
+    return gerar_dados_tickets(qtd=random.randint(5, 15), df_analistas=df_analistas)
+
+
+# Session State
 if "analistas" not in ss:
-    ss.analistas = gerar_dados_analistas(qtd=25)
+    ss.analistas = gerar_dados_analistas(qtd=random.randint(10, 25))
+    ss.df_analistas = (
+        processar_dados_random_user(ss.analistas)
+        .with_columns((pl.col("Nome") + " " + pl.col("Sobrenome")).alias("Analista"))
+        .select(["Foto", "Analista", "Email Empresarial", "Telefone"])
+    )
 
+if "tickets" not in ss:
+    ss.tickets = dados_tickets(
+        qtd=random.randint(10, 150), df_analistas=ss.df_analistas
+    )
+    ss.df_tickets = pl.DataFrame(ss.tickets)
 
-# def dados_tickets(qtd: int = 10, df: pl.DataFrame = pl.DataFrame()) -> list[dict]:
-#     """
-#     Gera dados sintéticos com a quantidade de itens informada, sendo o padrão 10 itens.
+# DFs
+df_analistas: pl.DataFrame = ss.df_analistas
+df_tickets: pl.DataFrame = ss.df_tickets
 
-#     Args:
-#         qtd (int, optional):
-#         Quantidade de itens para serem gerados. Padrão é 10.
-#         df_analistas (pl.DataFrame):
-#         Polars DataFrame com os dados dos analistas.
-
-#     Returns:
-#         list[dict]:
-#         Retorna uma lista de dicionários com os dados gerados.
-#     """
-#     return gerar_dados_tickets(qtd=qtd, df=df)
-
-
-# if "tickets" not in ss:
-#     ss.tickets = dados_tickets(qtd=10, df=ss.analistas)
 # endregion
 
-# region Transformar Dados
-df_analistas: pl.DataFrame = processar_dados_random_user(ss.analistas)
-df_analistas = df_analistas.with_columns(
-    (pl.col("Nome") + " " + pl.col("Sobrenome")).alias("Analista"),
-)
-df_analistas = df_analistas["Foto", "Analista", "Email Empresarial", "Telefone"]
+# region Sidebar
+# Botão - Gerar Novos Dados
+with st.sidebar:
+    if st.button(label="Gerar Novos Dados", width="stretch"):
+        ss.analistas = gerar_dados_analistas(qtd=random.randint(10, 25))
+        ss.df_analistas = (
+            processar_dados_random_user(ss.analistas)
+            .with_columns(
+                (pl.col("Nome") + " " + pl.col("Sobrenome")).alias("Analista")
+            )
+            .select(["Foto", "Analista", "Email Empresarial", "Telefone"])
+        )
+
+        ss.tickets = dados_tickets(
+            qtd=random.randint(10, 250), df_analistas=ss.df_analistas
+        )
+        ss.df_tickets = pl.DataFrame(ss.tickets)
+        st.rerun()
+
 # endregion
 
 # region App
@@ -115,11 +140,65 @@ st.write(
 )
 st.write("---")
 
-st.write("### Relação de Analistas")
-config_colunas: dict[any, any] = {
-    "Foto": st.column_config.ImageColumn(width="small"),
-}
+tabs = st.tabs(
+    [
+        "Resumo",
+        "Relação de Tickets",
+    ]
+)
 
+with tabs[0]:
+    st.write("### Resumo")
+    col1, col2, col3 = st.columns(3)
 
-st.dataframe(data=df_analistas, column_config=config_colunas, width="content")
+    with col1:
+        st.metric(
+            label="Tickets Abertos",
+            value=f"{len(df_tickets.filter(pl.col('Status Ticket') == 'Aberto')):,}",
+            border=True,
+        )
+
+    with col2:
+        st.metric(
+            label="Tickets Pendentes",
+            value=f"{len(df_tickets.filter(pl.col('Status Ticket') == 'Pendente')):,}",
+            border=True,
+        )
+
+    with col3:
+        st.metric(
+            label="Tickets Concluídos",
+            value=f"{len(df_tickets.filter(pl.col('Status Ticket') == 'Concluído')):,}",
+            border=True,
+        )
+
+    st.write("### Comparativo Mes a Mes")
+
+    fig = (
+        alt.Chart(df_tickets)
+        .mark_bar()
+        .encode(
+            x=alt.X(
+                "Data Criação Ticket:N",
+                timeUnit="yearmonth",
+                axis=alt.Axis(format="%m/%Y"),
+                title="Período",
+            ),
+            xOffset="Status Ticket",
+            y=alt.Y(
+                field="Status Ticket",
+                aggregate="count",
+                title="Quantidade por Status",
+            ),
+            color=alt.Color("Status Ticket", legend={"orient": "top"}).scale(
+                scheme="lightgreyred"
+            ),
+        )
+    )
+
+    st.altair_chart(fig, use_container_width=True)
+
+with tabs[1]:
+    st.write("### Relação de Tickets")
+    st.dataframe(data=df_tickets, width="stretch")
 # endregion
