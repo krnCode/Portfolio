@@ -83,15 +83,19 @@ def dados_tickets(
         list[dict]:
         Lista de dicionários com os dados gerados para tickets.
     """
-    return gerar_dados_tickets(qtd=random.randint(5, 15), df_analistas=df_analistas)
+    return gerar_dados_tickets(qtd=qtd, df_analistas=df_analistas)
 
 
 # endregion
 
+# region Random Qtd
+random_qtd_analistas = random.randint(5, 25)
+random_qtd_tickets = random.randint(5, 200)
+# endregion
 
 # region Session State
 if "analistas" not in ss:
-    ss.analistas = gerar_dados_analistas(qtd=random.randint(10, 25))
+    ss.analistas = gerar_dados_analistas(qtd=random_qtd_analistas)
     ss.df_analistas = (
         processar_dados_random_user(ss.analistas)
         .with_columns((pl.col("Nome") + " " + pl.col("Sobrenome")).alias("Analista"))
@@ -99,9 +103,7 @@ if "analistas" not in ss:
     )
 
 if "tickets" not in ss:
-    ss.tickets = dados_tickets(
-        qtd=random.randint(10, 150), df_analistas=ss.df_analistas
-    )
+    ss.tickets = dados_tickets(qtd=random_qtd_tickets, df_analistas=ss.df_analistas)
     ss.df_tickets = pl.DataFrame(ss.tickets)
 
 # DFs
@@ -114,7 +116,7 @@ df_tickets: pl.DataFrame = ss.df_tickets
 # Botão - Gerar Novos Dados
 with st.sidebar:
     if st.button(label="Gerar Novos Dados", width="stretch"):
-        ss.analistas = gerar_dados_analistas(qtd=random.randint(10, 25))
+        ss.analistas = gerar_dados_analistas(qtd=random_qtd_analistas)
         ss.df_analistas = (
             processar_dados_random_user(ss.analistas)
             .with_columns(
@@ -123,9 +125,7 @@ with st.sidebar:
             .select(["Foto", "Analista", "Email Empresarial", "Telefone"])
         )
 
-        ss.tickets = dados_tickets(
-            qtd=random.randint(10, 250), df_analistas=ss.df_analistas
-        )
+        ss.tickets = dados_tickets(qtd=random_qtd_tickets, df_analistas=ss.df_analistas)
         ss.df_tickets = pl.DataFrame(ss.tickets)
         st.rerun()
 
