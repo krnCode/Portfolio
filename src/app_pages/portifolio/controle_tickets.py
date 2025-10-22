@@ -42,9 +42,10 @@ st.set_page_config(
     Criamos um painel que acessa a API da plataforma de tickets, retorna os dados 
     necessários já tratados e realiza atualização automática do painel, e desta forma
     eliminamos o retrabalho para apresentar as informações atualizadas.
-    Também foi criado uma sessão para cada analista poder consultar o status de seus
-    tickets como melhoria. O analista pode ir até a aba que tem seu nome e visualizar
-    as informações dos tickets que ele está responsável.
+    Também foi criado como melhoria adicional uma sessão para que cada analista possa
+    consultar seus tickets. O analista pode ir até a aba "Tickets por Analista"
+    selecionar seu nome e assim o painel com os dados do tickets que ele está 
+    responsável será gerada.
     """,
     },
 )
@@ -84,7 +85,9 @@ def dados_tickets(
     return gerar_dados_tickets(qtd=random.randint(5, 15), df_analistas=df_analistas)
 
 
-# Session State
+# endregion
+
+# region Session State
 if "analistas" not in ss:
     ss.analistas = gerar_dados_analistas(qtd=random.randint(10, 25))
     ss.df_analistas = (
@@ -144,6 +147,7 @@ tabs = st.tabs(
     [
         "Resumo",
         "Relação de Tickets",
+        "Tickets por Analista",
     ]
 )
 
@@ -175,7 +179,10 @@ with tabs[0]:
     st.write("### Comparativo Mes a Mes")
 
     fig = (
-        alt.Chart(df_tickets)
+        alt.Chart(
+            df_tickets,
+            title="Tickets por período, considerando a data de criação",
+        )
         .mark_bar()
         .encode(
             x=alt.X(
@@ -188,17 +195,26 @@ with tabs[0]:
             y=alt.Y(
                 field="Status Ticket",
                 aggregate="count",
-                title="Quantidade por Status",
+                title="Quantidade",
             ),
             color=alt.Color("Status Ticket", legend={"orient": "top"}).scale(
                 scheme="lightgreyred"
             ),
+            text="count(*):Q",
         )
     )
 
-    st.altair_chart(fig, use_container_width=True)
+    fig_labels = fig + fig.mark_text(
+        align="center", dy=-10, size=15, blend="difference", fontWeight="bold"
+    )
+
+    st.altair_chart(fig_labels, use_container_width=True)
 
 with tabs[1]:
     st.write("### Relação de Tickets")
     st.dataframe(data=df_tickets, width="stretch")
+
+with tabs[2]:
+    st.write("### Tickets por Analista")
+
 # endregion
