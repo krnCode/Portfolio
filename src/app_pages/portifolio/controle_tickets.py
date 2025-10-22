@@ -16,6 +16,7 @@ import polars as pl
 import random
 
 from streamlit import session_state as ss
+from datetime import datetime
 from tools.api_data import buscar_dados_random_user, processar_dados_random_user
 from mockup_data.faker_data_generation import gerar_dados_tickets
 
@@ -87,6 +88,7 @@ def dados_tickets(
 
 # endregion
 
+
 # region Session State
 if "analistas" not in ss:
     ss.analistas = gerar_dados_analistas(qtd=random.randint(10, 25))
@@ -131,7 +133,7 @@ with st.sidebar:
 
 # region App
 st.title(
-    "Controle de Tickets (Página em Desenvolvimento)",
+    "Controle de Tickets",
 )
 st.write(
     "*Para mais informações sobre este projeto, acesse o menu no canto superior "
@@ -215,6 +217,132 @@ with tabs[1]:
     st.dataframe(data=df_tickets, width="stretch")
 
 with tabs[2]:
-    st.write("### Tickets por Analista")
+    with st.sidebar:
+        relacao_analistas: pl.DataFrame = ss.df_analistas
+        analista_selecionado: list[str] = st.multiselect(
+            label="Analista",
+            width=400,
+            options=relacao_analistas.select(pl.col("Analista"))
+            .unique()
+            .sort("Analista")
+            .to_series()
+            .to_list(),
+            placeholder="Selecione pelo nome do analista",
+        )
 
-# endregion
+    if not analista_selecionado:
+        st.warning(
+            """
+            Nenhum analista selecionado.
+            
+            Selecione um analista na barra lateral para visualizar sua sessão.
+            """
+        )
+
+    for analista in analista_selecionado:
+        dados_analista = ss.df_analistas.filter(pl.col("Analista") == analista)
+        tickets_analista = df_tickets.filter(pl.col("Analista") == analista)
+
+        col1, col2, col3 = st.columns(
+            spec=[0.1, 0.3, 0.6],
+            vertical_alignment="bottom",
+        )
+
+        with col1:
+            st.image(
+                dados_analista["Foto"][0],
+                width=180,
+            )
+
+        with col2:
+            st.title(f"{analista}")
+            st.write(f"Tel Comercial: {dados_analista["Telefone"][0]}")
+            st.write(f"E-mail Comercial: {dados_analista["Email Empresarial"][0]}")
+
+        with col3:
+            col1, col2, col3, col4 = st.columns(spec=4, gap="medium")
+            with col1:
+                base = alt.Chart(tickets_analista).encode(
+                    y=alt.Y("Status Ticket:N", title=None),
+                    x=alt.X("count(Status Ticket):Q", title=None),
+                    color=alt.Color(
+                        "Status Ticket:N",
+                        legend=None,
+                    ).scale(scheme="lightgreyred"),
+                )
+
+                bars = base.mark_bar()
+
+                text = base.mark_text(
+                    align="left",
+                    dx=3,  # Offset from the end of bars
+                    size=15,
+                    color="white",
+                    fontWeight="bold",
+                ).encode(text="count(*):Q")
+
+                chart = alt.layer(bars, text)
+
+                st.altair_chart(chart, use_container_width=True)
+
+            with col2:
+                st.metric(
+                    label="Tickets em Atendimento",
+                    value=f"{tickets_analista.filter(
+                            (pl.col("Status Ticket").is_in(["Aberto", "Pendente"]))
+                ).count()[0, 0]:,}",
+                    border=False,
+                    height="content",
+                    help="""
+                        Tickets em atendimento (abertos ou pendentes).
+                        """,
+                )
+
+            with col3:
+                st.metric(
+                    label="Qtd tickets > 15 dias",
+                    value=f"{tickets_analista.filter(
+                        (pl.col("Status Ticket").is_in(["Aberto", "Pendente"])) &
+                        ((datetime.now() - pl.col("Data Criação Ticket"))
+                        .dt.total_days() > 15)
+                    ).count()[0, 0]:,}",
+                    border=False,
+                    height="content",
+                    help="""
+                        Tickets em atendimento (abertos ou pendentes) com data de 
+                        criação maior que 15 dias.
+                        """,
+                )
+
+            with col4:
+                st.write("Opções de visualização")
+
+                somente_tkt_15_dias = st.toggle(
+                    label="Mais de 15 dias",
+                    value=False,
+                    key=f"toggle15dias{analista}",
+                )
+                if somente_tkt_15_dias:
+                    tickets_analista = tickets_analista.filter(
+                        (pl.col("Status Ticket").is_in(["Aberto", "Pendente"]))
+                        & (
+                            (
+                                datetime.now() - pl.col("Data Criação Ticket")
+                            ).dt.total_days()
+                            > 15
+                        )
+                    )
+
+                somente_tkt_atendimento = st.toggle(
+                    label="Em atendimento",
+                    value=False,
+                    key=f"toggleematendimento{analista}",
+                )
+                if somente_tkt_atendimento:
+                    tickets_analista = tickets_analista.filter(
+                        (pl.col("Status Ticket").is_in(["Aberto", "Pendente"]))
+                    )
+
+        with st.expander(label="Relação de Tickets", expanded=False):
+            st.dataframe(data=tickets_analista, width="stretch")
+        st.write("---")
