@@ -4,7 +4,7 @@ Página inicial. Contém apenas boas vindas e o objetivo do projeto.
 
 import streamlit as st
 
-st.set_page_config(page_title="Sobre", layout="centered")
+st.set_page_config(page_title="Portfolio", layout="centered")
 
 st.title("Sobre esta página")
 
