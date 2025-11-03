@@ -28,26 +28,6 @@ from datetime import datetime, timedelta
 st.set_page_config(
     page_title="Extrato de Serviços",
     layout="wide",
-    menu_items={
-        "About": """
-    PROBLEMA:
-
-    Os analistas recebiam diversas solicitações de clientes para o envio
-    de mais informações sobre os serviços prestados contendo a composição do que 
-    foi cobrado. Os analistas precisavam encontrar estes dados no sistema, extrair 
-    relatórios, tratar, recalcular e confirmar se estava tudo correto, para então enviar
-    ao cliente.
-
-    SOLUÇÃO:
-    
-    Padronizamos o processo de análise e extração por meio de um painel que
-    permite a visualização dos dados, a exportação em excel já formatado e recalculado,
-    facilitando e agilizando o atendimento ao cliente. Neste painel, as informações
-    entre as diferentes tabelas (tabela de projetos e tabela de serviços) já estão
-    relacionadas, e o usuário pode filtrar por projeto, cliente, data, etc para extrair
-    apenas os dados que precisa enviar.
-    """,
-    },
 )
 # endregion
 
@@ -243,10 +223,67 @@ with st.sidebar:
 
 # region App
 st.title("Extrato de Serviços")
-st.write(
-    "*Para mais informações sobre este projeto, acesse o menu no canto superior "
-    "direito (os três pontos), e clique em 'About'.*"
-)
+
+with st.expander(label="Sobre esta solução", expanded=False):
+    col1, col2, col3 = st.columns(spec=3, gap="small")
+    with col1:
+        st.markdown(
+            """
+            ##### **O PROBLEMA**:
+
+            O envio do extrato de serviços prestados era um processo moroso, repetitivo
+            e com risco de erros devido a realização de cálculos em planilha realizados
+            manualmente. Isso causava demora no retorno de informações, e estas
+            soliticatações são frequentes no setor. 
+            """
+        )
+
+    with col2:
+        st.markdown(
+            """
+            ##### **A SOLUÇÃO**:
+
+            Padronizamos o processo de análise e extração do relatório por meio de um 
+            painel que possibilita a visualização dos dados, exportação em excel já 
+            formatado e recalculado sistemicamente, facilitando e agilizando o 
+            atendimento da solicitação. Neste painel, as informações entre as diferentes
+            tabelas (tabela de projetos e tabela de serviços) já estão relacionadas, e o
+            usuário pode filtrar por projeto, cliente, data, etc para extrair apenas os 
+            dados que precisa enviar.
+            """
+        )
+
+    with col3:
+        st.markdown(
+            """
+            ##### **OS IMPACTOS**:
+            1) Padroniação do processo de análise e extração dos dados;
+            2) Redução de cerca de 80% do tempo necessário para o envio do extrato de
+            serviços prestados;
+            3) Mais segurança no recálculo dos valores para envio, e consequentemente, 
+            diminuição das interações no ticket (menos questionamentos solicitando o 
+            esclarecimento de valores);
+            4) Visualização gráfica dos dados, o que facilita a validação e compreensão
+            das informações;
+            """
+        )
+
+    st.write("---")
+
+    st.markdown(
+        """
+        ##### **PRÓXIMOS PASSOS**:
+        Para evolução e melhoria contínua deste painel, seguem sugestões:
+        1) Inclusão de outros KPIs relevantes para a área e objetivo do painel;
+        2) Incluir novas visualizações dos dados (entender quais informações são mais 
+        relevantes no contexto das análises);
+        3) Aprimorar as visualizações já existentes com base no uso e feedback dos 
+        analistas;
+        4) Se necessário, criar uma nova aba ou relatório para a gerencia ter o 
+        acompanhamento quinzenal da evolução dos serviços prestados;
+        """
+    )
+
 st.write(
     "*Todas as informações são fictícias, geradas aleatoriamente utilizando a "
     "biblioteca Faker  para simular situações reais.*"
