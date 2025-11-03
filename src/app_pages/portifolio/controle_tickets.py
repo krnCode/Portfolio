@@ -120,10 +120,10 @@ with st.expander(label="Sobre esta solução", expanded=False):
             """
             ##### **O PROBLEMA**:
 
-            A geração do painel de acompanhamento dos tickets por analista era um processo
-            moroso e manual, sendo realizado, no mínimo, duas vezes por dia para ter a visão
-            gerencial de todos os tickets abertos, pendentes e em atendimento por mais de 15
-            dias.
+            A geração do painel de acompanhamento dos tickets por analista era um 
+            processo moroso e manual, sendo realizado, no mínimo, duas vezes por dia 
+            para ter a visão gerencial de todos os tickets abertos, pendentes e em 
+            atendimento por mais de 15 dias.
             """
         )
 
@@ -132,9 +132,9 @@ with st.expander(label="Sobre esta solução", expanded=False):
             """
             ##### **A SOLUÇÃO**:
 
-            Criamos um painel automatizado onde não é mais necessário a atualização manual.
-            O painel acessa a API da plataforma e retorna os dados necessários, já tratados
-            e atualizados.
+            Criamos um painel automatizado onde não é mais necessário a atualização 
+            manual. O painel acessa a API da plataforma e retorna os dados necessários, 
+            já tratados e atualizados.
 
             Além disso, como melhoria adicional, criamos uma sessão onde o analista pode
             consultar seus tickets. Nesta sessão, ele poderá até mesmo filtrar os dados 
