@@ -26,29 +26,6 @@ from mockup_data.faker_data_generation import gerar_dados_tickets
 st.set_page_config(
     page_title="Controle de tickets",
     layout="wide",
-    menu_items={
-        "About": """
-    PROBLEMA:
-
-    Diaramente o time recebe tickets em uma plataforma específica para atenderem 
-    solicitações de clientes ou de áreas internas. Para que a gerencia possa controlar
-    o andamento dos tickets, era necessário extrair os relatórios da plataforma, 
-    tratá-los manualmente e atualizar os dados na ferramenta de BI, o que consumia
-    muito tempo além de não ter as informações atualizadas ao longo do dia 
-    (era necessário extrair os relatorios novamente e refazer o processo).
-
-
-    SOLUÇÃO:
-
-    Criamos um painel que acessa a API da plataforma de tickets, retorna os dados 
-    necessários já tratados e realiza atualização automática do painel, e desta forma
-    eliminamos o retrabalho para apresentar as informações atualizadas.
-    Também foi criado como melhoria adicional uma sessão para que cada analista possa
-    consultar seus tickets. O analista pode ir até a aba "Tickets por Analista"
-    selecionar seu nome e assim o painel com os dados do tickets que ele está 
-    responsável será gerada.
-    """,
-    },
 )
 # endregion
 
@@ -137,7 +114,7 @@ st.title(
 )
 
 with st.expander(label="Sobre esta solução", expanded=False):
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3 = st.columns(spec=3, gap="small")
     with col1:
         st.markdown(
             """
@@ -153,35 +130,42 @@ with st.expander(label="Sobre esta solução", expanded=False):
     with col2:
         st.markdown(
             """
-                ##### **A SOLUÇÃO**:
+            ##### **A SOLUÇÃO**:
 
-                Criamos um painel automatizado onde não é mais necessário a atualização manual.
-                O painel acessa a API da plataforma e retorna os dados necessários, já tratados
-                e atualizados.
+            Criamos um painel automatizado onde não é mais necessário a atualização manual.
+            O painel acessa a API da plataforma e retorna os dados necessários, já tratados
+            e atualizados.
 
-                Além disso, como melhoria adicional, criamos uma sessão onde o analista pode
-                consultar seus tickets. Nesta sessão, ele poderá até mesmo filtrar os dados 
-                para visualizar somente os tickets abertos a mais de 15 dias em atendimento.
-                """
+            Além disso, como melhoria adicional, criamos uma sessão onde o analista pode
+            consultar seus tickets. Nesta sessão, ele poderá até mesmo filtrar os dados 
+            para visualizar somente os tickets abertos a mais de 15 dias em atendimento.
+            """
         )
 
     with col3:
         st.markdown(
             """
-                ##### **OS IMPACTOS**:
-                1) Diminuição de atividades que não geram impacto real;
-                2) Informações de tickets atualizadas sistemicamente quando necessário;
-                3) A melhoria adicional possibilita que o analista tenha de forma
-                tempestiva os tickes que precisam ser priorizados (mais de 15 dias em 
-                atendimento);    
+            ##### **OS IMPACTOS**:
+            1) Diminuição de atividades que não geram impacto real;
+            2) Informações de tickets atualizadas sistemicamente quando necessário;
+            3) A melhoria adicional possibilita que o analista tenha de forma
+            tempestiva os tickes que precisam ser priorizados (mais de 15 dias em 
+            atendimento);    
             """
         )
 
+    st.write("---")
 
-st.write(
-    "*Para mais informações sobre este projeto, acesse o menu no canto superior "
-    "direito (os três pontos), e clique em 'About'.*"
-)
+    st.markdown(
+        """
+        ##### **PRÓXIMOS PASSOS**:
+        Para evolução e melhoria contínua deste painel, seguem sugestões:
+        1) Inclusão de outros KPIs relevantes para a área e objetivo do painel;
+        2) Inclusão de filtros para visualização de todos os tickets;
+        3) Possibilidade da exportação dos dados para arquivos Excel;
+        """
+    )
+
 st.write(
     "*Todas as informações são fictícias, geradas aleatoriamente utilizando a "
     "API do site randomuser.me e biblioteca Faker para simular situações reais.*"
