@@ -135,6 +135,49 @@ with st.sidebar:
 st.title(
     "Controle de Tickets",
 )
+
+with st.expander(label="Sobre esta solução", expanded=False):
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.markdown(
+            """
+            ##### **O PROBLEMA**:
+
+            A geração do painel de acompanhamento dos tickets por analista era um processo
+            moroso e manual, sendo realizado, no mínimo, duas vezes por dia para ter a visão
+            gerencial de todos os tickets abertos, pendentes e em atendimento por mais de 15
+            dias.
+            """
+        )
+
+    with col2:
+        st.markdown(
+            """
+                ##### **A SOLUÇÃO**:
+
+                Criamos um painel automatizado onde não é mais necessário a atualização manual.
+                O painel acessa a API da plataforma e retorna os dados necessários, já tratados
+                e atualizados.
+
+                Além disso, como melhoria adicional, criamos uma sessão onde o analista pode
+                consultar seus tickets. Nesta sessão, ele poderá até mesmo filtrar os dados 
+                para visualizar somente os tickets abertos a mais de 15 dias em atendimento.
+                """
+        )
+
+    with col3:
+        st.markdown(
+            """
+                ##### **OS IMPACTOS**:
+                1) Diminuição de atividades que não geram impacto real;
+                2) Informações de tickets atualizadas sistemicamente quando necessário;
+                3) A melhoria adicional possibilita que o analista tenha de forma
+                tempestiva os tickes que precisam ser priorizados (mais de 15 dias em 
+                atendimento);    
+            """
+        )
+
+
 st.write(
     "*Para mais informações sobre este projeto, acesse o menu no canto superior "
     "direito (os três pontos), e clique em 'About'.*"
