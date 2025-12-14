@@ -19,7 +19,7 @@ app_pages: dict[str, list[st.Page]] = {
     ],
     "Projetos Pessoais": [
         st.Page("./app_pages/projetos_pessoais/streamglitch.py", title="streamGlitCH"),
-        # st.Page("./app_pages/projetos_pessoais/sapo_saver.py", title="Sapo Saver"),
+        st.Page("./app_pages/projetos_pessoais/sapo_saver.py", title="Sapo Saver"),
         # st.Page("./app_pages/projetos_pessoais/qftb.py", title="Quest for the Best"),
     ],
 }
