@@ -9,7 +9,7 @@ app_pages: dict[str, list[st.Page]] = {
     "Início": [
         st.Page("./app_pages/inicio/sobre.py", title="Sobre"),
     ],
-    "Portfolio": [
+    "Portfólio": [
         st.Page(
             "./app_pages/portifolio/extrato_servicos.py", title="Extrato de Serviços"
         ),
