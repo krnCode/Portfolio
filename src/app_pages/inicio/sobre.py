@@ -97,8 +97,8 @@ with col1:
     st.markdown("#### 🏢 Portfólio | Casos de Negócio")
     st.markdown(
         """
-    * **Extrato de Serviços:** Automação de conciliação financeira e detecção de 
-    anomalias em faturamentos.
+    * **Extrato de Serviços:** Automação para a identificação dos serviços prestados e 
+    geração de relatório para envio ao cliente.
     
     * **Controle de Tickets:** Dashboard operacional focado em SLA e gargalos de 
     atendimento (Customer Experience).
