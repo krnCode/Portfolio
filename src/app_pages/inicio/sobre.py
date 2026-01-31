@@ -1,10 +1,12 @@
 """
-Página inicial. Contém apenas boas vindas e o objetivo do projeto.
+Página inicial.
+Contém informações sobre o autor e sobre a página, com um breve resumo do itens que
+compõem o Portfólio.
 """
 
 import streamlit as st
 
-st.set_page_config(page_title="Paulo Santana | Portfolio", layout="wide")
+st.set_page_config(page_title="Paulo Santana | Portfólio", layout="wide")
 
 st.markdown(
     """
