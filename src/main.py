@@ -13,9 +13,9 @@ app_pages: dict[str, list[st.Page]] = {
         st.Page(
             "./app_pages/portifolio/extrato_servicos.py", title="Extrato de Serviços"
         ),
-        # st.Page(
-        #     "./app_pages/portifolio/controle_tickets.py", title="Controle de Tickets"
-        # ), randomuser.me is offline, causing errors in the page
+        st.Page(
+            "./app_pages/portifolio/controle_tickets.py", title="Controle de Tickets"
+        ),
     ],
     "Projetos Pessoais": [
         st.Page("./app_pages/projetos_pessoais/streamglitch.py", title="streamGlitCH"),
